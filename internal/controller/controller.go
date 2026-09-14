@@ -310,4 +310,28 @@ func MembersOfclass(c *gin.Context) {
 	c.JSON(http.StatusOK, members)
 
 }
-func SearchMembers(c *gin.Context){}
+func SearchMember(c *gin.Context){
+
+	name := c.Query("name")
+
+	if name == "" {
+		c.JSON(400, gin.H{
+			"error": "name is required",
+		})
+		return
+	}
+
+	members, err := services.SearchMembers(
+		c.Request.Context(),
+		name,
+	)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, members)
+}
