@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"strings"
 
 	"book.api/train4/internal/database"
 	"book.api/train4/internal/model"
@@ -482,6 +483,9 @@ func MemberOfthisClass(id int) ([]model.Member, error) {
 }
 
 func SearchMembers(name string) ([]model.Class, error) {
+	trimmedName := strings.TrimSpace(name)
+	pattern := "%" + trimmedName + "%"
+
 	rows, err := database.DB.Query(
 		context.Background(),
 		`SELECT c.id, c.name, c.trainer_id, t.name AS trainer_name, c.capacity, c.price
@@ -489,9 +493,9 @@ func SearchMembers(name string) ([]model.Class, error) {
 		 JOIN members m ON r.member_id = m.id
 		 JOIN classes c ON r.class_id = c.id
 		 JOIN trainers t ON c.trainer_id = t.id
-		 WHERE m.name = $1
+		 WHERE m.name ILIKE $1
 		 ORDER BY c.id`,
-		name,
+		pattern,
 	)
 	if err != nil {
 		return nil, err
