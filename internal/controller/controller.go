@@ -332,3 +332,6 @@ func SearchMember(c *gin.Context){
 
 	c.JSON(200, classes)
 }
+func TrainerOfthisSpecialty(c *gin.Context){
+	
+}

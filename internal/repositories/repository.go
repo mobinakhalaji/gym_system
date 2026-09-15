@@ -420,7 +420,7 @@ func ClassesOfthisMember(id int) ([]model.Class, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	classes := make([]model.Class, 0)
 	for rows.Next() {
 		var class model.Class
@@ -481,22 +481,23 @@ func MemberOfthisClass(id int) ([]model.Member, error) {
 	return members, nil
 }
 
-func SearchMembers(name string)([]model.Class , error){
+func SearchMembers(name string) ([]model.Class, error) {
 	rows, err := database.DB.Query(
 		context.Background(),
-		`SELECT c.id, c.name, c.trainer_id, t.name, c.capacity, c.price
+		`SELECT c.id, c.name, c.trainer_id, t.name AS trainer_name, c.capacity, c.price
 		 FROM registers r
+		 JOIN members m ON r.member_id = m.id
 		 JOIN classes c ON r.class_id = c.id
-		 JOIN members m ON c.member_id = m.id
+		 JOIN trainers t ON c.trainer_id = t.id
 		 WHERE m.name = $1
-		 `,
+		 ORDER BY c.id`,
 		name,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	classes := make([]model.Class, 0)
 	for rows.Next() {
 		var class model.Class
@@ -518,6 +519,4 @@ func SearchMembers(name string)([]model.Class , error){
 	}
 
 	return classes, nil
-
-
 }
