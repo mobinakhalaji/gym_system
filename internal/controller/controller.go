@@ -321,10 +321,7 @@ func SearchMember(c *gin.Context){
 		return
 	}
 
-	members, err := services.SearchMembers(
-		c.Request.Context(),
-		name,
-	)
+	classes, err := services.SearchMembers(c.Request.Context(),name)
 
 	if err != nil {
 		c.JSON(500, gin.H{
@@ -333,5 +330,5 @@ func SearchMember(c *gin.Context){
 		return
 	}
 
-	c.JSON(200, members)
+	c.JSON(200, classes)
 }

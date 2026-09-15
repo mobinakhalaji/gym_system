@@ -481,5 +481,43 @@ func MemberOfthisClass(id int) ([]model.Member, error) {
 	return members, nil
 }
 
+func SearchMembers(name string)([]model.Class , error){
+	rows, err := database.DB.Query(
+		context.Background(),
+		`SELECT c.id, c.name, c.trainer_id, t.name, c.capacity, c.price
+		 FROM registers r
+		 JOIN classes c ON r.class_id = c.id
+		 JOIN members m ON c.member_id = m.id
+		 WHERE m.name = $1
+		 `,
+		name,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	
+	classes := make([]model.Class, 0)
+	for rows.Next() {
+		var class model.Class
+		if err := rows.Scan(
+			&class.ID,
+			&class.Name,
+			&class.TrainerID,
+			&class.TrainerName,
+			&class.Capacity,
+			&class.Price,
+		); err != nil {
+			return nil, err
+		}
+		classes = append(classes, class)
+	}
 
-//fmt.PrintLn("hellow world")
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return classes, nil
+
+
+}

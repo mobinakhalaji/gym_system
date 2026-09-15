@@ -26,6 +26,6 @@ func Register(r *gin.Engine) {
 	r.POST("/register", controllers.Register)
 	r.GET("/members/:id/classes", controllers.ClassesforMember)
 	r.GET("/classes/:id/members", controllers.MembersOfclass)
-	r.GET("/members/search",controllers.SearchMembers)
+	r.GET("/members/search",controllers.SearchMember)
 
 }

@@ -155,3 +155,7 @@ func MemberOfthisClass(id int) ([]model.Member, error) {
 
 	return members, nil
 }
+
+func SearchMembers(ctx context.Context, name string) ([]model.Class, error) {
+	return repositories.SearchMembers(name)
+}
